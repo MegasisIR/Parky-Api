@@ -9,7 +9,6 @@ namespace ParkyAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [ApiExplorerSettings(GroupName = "ParkyApiNP")]
     public class NationalParksController : Controller
 
     {

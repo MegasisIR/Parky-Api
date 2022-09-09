@@ -9,7 +9,6 @@ namespace ParkyAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [ApiExplorerSettings(GroupName = "ParkyApiTrail")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public class TrailsController : Controller
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ParkyAPI.Data;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<ParkDbContext>(
 
 AddInjectionRepository(builder.Services);
 ConfigureServices(builder.Services);
+ConfigureVersioning(builder.Services);
 builder.Services.AddControllers();
 
 ConfigureServicesSwagger(builder.Services);
@@ -52,36 +54,31 @@ void ConfigureServices(IServiceCollection services)
     services.AddAutoMapper(typeof(ParkyMappings));
 }
 
+
+#region Versioning
+void ConfigureVersioning(IServiceCollection services)
+{
+    services.AddApiVersioning(options =>
+    {
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.DefaultApiVersion= new ApiVersion(1, 0);
+        options.ReportApiVersions = true;
+    });
+}
+#endregion
+
 #region Swagger Configure
 
 void ConfigureServicesSwagger(IServiceCollection services)
 {
     services.AddSwaggerGen(options =>
     {
-        options.SwaggerDoc("ParkyApiNP",
+        options.SwaggerDoc("ParkyApi",
             new OpenApiInfo()
             {
-                Title = "Parky Api (National Park)",
+                Title = "Parky Api",
                 Version = "v1",
                 Description = "web api national park information",
-                Contact = new OpenApiContact()
-                {
-                    Email = "Mehrdadit12@gmail.com",
-                    Name = "Mehrdad Tabesh",
-                    Url = new UriBuilder("mehrdadtabesh.ir").Uri
-                },
-                License = new OpenApiLicense()
-                {
-                    Name = "MIT License",
-                    Url =new UriBuilder("https://en.wikipedia.org/wiki/MIT_License").Uri
-                }
-            });
-        options.SwaggerDoc("ParkyApiTrail",
-            new OpenApiInfo()
-            {
-                Title = "Parky Api Trails",
-                Version = "v1",
-                Description = "web api trails information",
                 Contact = new OpenApiContact()
                 {
                     Email = "Mehrdadit12@gmail.com",
@@ -105,8 +102,7 @@ void ConfigureAppSwagger(WebApplication app)
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/ParkyApiNP/swagger.json", "Parky Api National Park");
-        options.SwaggerEndpoint("/swagger/ParkyApiTrail/swagger.json", "Parky Api Trails");
+        options.SwaggerEndpoint("/swagger/ParkyApi/swagger.json", "Parky Api");
     });
 }
 #endregion
